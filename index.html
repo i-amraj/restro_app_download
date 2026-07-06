@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restro Suite - App Download Center</title>
+    <meta name="description" content="Download the ultimate tools for your restaurant operations. High-performance Restro POS and seamless Bluetooth thermal printing service.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            accent: '#ff3366',
+                        },
+                        violet: {
+                            accent: '#8b5cf6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Flowbite CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS for Glowing Effects & Animations -->
+    <style>
+        body {
+            background-color: #0b0f19;
+            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-panel:hover {
+            border-color: rgba(244, 63, 94, 0.3);
+            box-shadow: 0 0 30px rgba(244, 63, 94, 0.1);
+        }
+
+        .glass-panel-violet:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.1);
+        }
+
+        /* Three.js Canvas container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f43f5e;
+        }
+
+        /* Ambient Glow backgrounds */
+        .glow-sphere-1 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.15) 0%, rgba(244, 63, 94, 0) 70%);
+            top: -10%;
+            left: -10%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glow-sphere-2 {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0) 70%);
+            bottom: 10%;
+            right: -10%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Keyframe animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="text-gray-100 antialiased relative min-h-screen">
+
+    <!-- Three.js Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Glowing Background Spheres -->
+    <div class="glow-sphere-1"></div>
+    <div class="glow-sphere-2"></div>
+
+    <!-- Main Wrapper -->
+    <div class="relative z-10 min-h-screen flex flex-col justify-between">
+        
+        <!-- Header -->
+        <header class="w-full px-6 py-6 lg:px-16 flex items-center justify-between border-b border-gray-800/50 backdrop-blur-md sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-violet-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                    <i data-lucide="store" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">Restro<span class="text-brand-500 font-extrabold">Suite</span></span>
+                    <span class="block text-[10px] text-gray-500 font-medium uppercase tracking-widest leading-none">Internal Release</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#guide" class="text-sm font-medium text-gray-400 hover:text-white transition duration-200 flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> Installation Guide
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col justify-center">
+            
+            <!-- Hero Title -->
+            <div class="text-center max-w-3xl mx-auto mb-16 relative">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-semibold uppercase tracking-wider mb-6 animate-pulse-slow">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></span>
+                    Ready for Deployment
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+                    Power Your Restaurant with <br>
+                    <span class="bg-gradient-to-r from-brand-400 via-rose-500 to-violet-500 bg-clip-text text-transparent">Restro App Suite</span>
+                </h1>
+                <p class="text-lg text-gray-400 font-normal leading-relaxed">
+                    Download official restaurant applications for point of sale billing and direct thermal Bluetooth printing. Setup instantly and run offline.
+                </p>
+            </div>
+
+            <!-- Apps Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto w-full mb-20">
+                
+                <!-- App Card 1: Restro POS -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl group-hover:bg-brand-500/20 transition-all duration-500"></div>
+                    
+                    <div>
+                        <!-- App Icon & Title -->
+                        <div class="flex items-start justify-between mb-8">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-rose-600 flex items-center justify-center shadow-xl shadow-brand-500/10 group-hover:scale-105 transition-transform duration-300">
+                                <i data-lucide="chef-hat" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <span class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400 text-xs font-medium">
+                                APK v1.0.0
+                            </span>
+                        </div>
+                        
+                        <!-- Details -->
+                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-400 transition-colors duration-200">Get Restro POS</h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            Complete Point of Sale solution customized for restaurant management. Take orders, manage bills, dynamic table views, and track sales metrics with high-speed performance.
+                        </p>
+                        
+                        <!-- Metadata List -->
+                        <div class="border-t border-gray-800/80 pt-6 mb-8 space-y-3">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-500">File Name</span>
+                                <span class="text-gray-300 font-mono">Get-Restro-Pos.apk</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-500">Size</span>
+                                <span class="text-brand-400 font-semibold">48.7 MB (51,105,823 bytes)</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-500">Platform</span>
+                                <span class="text-gray-300 flex items-center gap-1"><i data-lucide="android" class="w-3.5 h-3.5 text-green-500"></i> Android 7.0+</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions Area -->
+                    <div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <!-- Download Button -->
+                            <button onclick="handleDownload(this, './Get-Restro-Pos.apk', 'Get-Restro-Pos.apk')" class="w-full sm:flex-grow relative overflow-hidden group/btn px-6 py-4 rounded-xl bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-500 hover:to-rose-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-brand-600/20 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+                                <span class="btn-text flex items-center gap-2">
+                                    <i data-lucide="download" class="w-4 h-4 animate-bounce"></i> Direct Download
+                                </span>
+                                <div class="btn-loader hidden flex items-center gap-2">
+                                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span class="loader-text">Downloading...</span>
+                                </div>
+                            </button>
+
+                            <!-- QR Code Trigger -->
+                            <button data-tooltip-target="qr-tooltip-pos" class="p-3.5 rounded-xl bg-gray-800/80 hover:bg-gray-700 border border-gray-700/50 hover:border-gray-600 text-gray-300 hover:text-white transition duration-200" onclick="showQrModal('Get Restro POS', './Get-Restro-Pos.apk')">
+                                <i data-lucide="qr-code" class="w-5 h-5"></i>
+                            </button>
+                            <div id="qr-tooltip-pos" role="tooltip" class="absolute z-50 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                Scan QR Code to Download
+                                <div class="tooltip-arrow" data-device-scrollbar></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- App Card 2: BT Printer Service -->
+                <div class="glass-panel glass-panel-violet rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute -top-24 -right-24 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl group-hover:bg-violet-500/20 transition-all duration-500"></div>
+
+                    <div>
+                        <!-- App Icon & Title -->
+                        <div class="flex items-start justify-between mb-8">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-violet-500/10 group-hover:scale-105 transition-transform duration-300">
+                                <i data-lucide="printer" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <span class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400 text-xs font-medium">
+                                APK v1.0.0
+                            </span>
+                        </div>
+                        
+                        <!-- Details -->
+                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-violet-400 transition-colors duration-200">Restro BT Printer Service</h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            Bluetooth ESC/POS thermal printer service utility. Bridges POS application prints directly with standard 58mm and 80mm Bluetooth hardware with custom auto-scaling.
+                        </p>
+                        
+                        <!-- Metadata List -->
+                        <div class="border-t border-gray-800/80 pt-6 mb-8 space-y-3">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-500">File Name</span>
+                                <span class="text-gray-300 font-mono">ffit-bt-printer (1).apk</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-500">Size</span>
+                                <span class="text-violet-400 font-semibold">5.8 MB (6,090,350 bytes)</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-500">Platform</span>
+                                <span class="text-gray-300 flex items-center gap-1"><i data-lucide="android" class="w-3.5 h-3.5 text-green-500"></i> Android 5.0+</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions Area -->
+                    <div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <!-- Download Button -->
+                            <button onclick="handleDownload(this, './ffit-bt-printer (1).apk', 'ffit-bt-printer (1).apk')" class="w-full sm:flex-grow relative overflow-hidden group/btn px-6 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-violet-600/20 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+                                <span class="btn-text flex items-center gap-2">
+                                    <i data-lucide="download" class="w-4 h-4 animate-bounce"></i> Direct Download
+                                </span>
+                                <div class="btn-loader hidden flex items-center gap-2">
+                                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span class="loader-text">Downloading...</span>
+                                </div>
+                            </button>
+
+                            <!-- QR Code Trigger -->
+                            <button data-tooltip-target="qr-tooltip-printer" class="p-3.5 rounded-xl bg-gray-800/80 hover:bg-gray-700 border border-gray-700/50 hover:border-gray-600 text-gray-300 hover:text-white transition duration-200" onclick="showQrModal('Restro BT Printer Service', './ffit-bt-printer (1).apk')">
+                                <i data-lucide="qr-code" class="w-5 h-5"></i>
+                            </button>
+                            <div id="qr-tooltip-printer" role="tooltip" class="absolute z-50 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                Scan QR Code to Download
+                                <div class="tooltip-arrow" data-device-scrollbar></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Guide Section -->
+            <section id="guide" class="max-w-4xl mx-auto w-full mb-16 pt-10 border-t border-gray-800/60">
+                <h3 class="text-2xl font-bold text-center text-white mb-8 flex items-center justify-center gap-2">
+                    <i data-lucide="info" class="w-6 h-6 text-brand-500"></i> Setup & Installation Instructions
+                </h3>
+
+                <div id="accordion-collapse" data-accordion="collapse">
+                    
+                    <!-- Item 1 -->
+                    <h2 id="accordion-collapse-heading-1">
+                        <button type="button" class="flex items-center justify-between w-full p-5 font-semibold text-left text-gray-300 border border-b-0 border-gray-800 rounded-t-2xl bg-gray-900/40 hover:bg-gray-900/80 transition focus:outline-none" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true" aria-controls="accordion-collapse-body-1">
+                            <span class="flex items-center gap-3"><i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i> 1. Enable Installation from Unknown Sources</span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-collapse-body-1" class="hidden" aria-labelledby="accordion-collapse-heading-1">
+                        <div class="p-6 border border-b-0 border-gray-800 bg-gray-950/20 text-gray-400 text-sm leading-relaxed">
+                            <p class="mb-2">Since these are Android applications loaded directly (.apk files), you will need to allow installation from unknown sources on your Android device:</p>
+                            <ol class="list-decimal pl-5 space-y-2 mt-2">
+                                <li>Open your device <strong>Settings</strong>.</li>
+                                <li>Go to <strong>Security</strong> or <strong>Privacy</strong> (varies by manufacturer).</li>
+                                <li>Look for <strong>Install Unknown Apps</strong> or <strong>Unknown Sources</strong> and enable permissions for your browser/file manager.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <h2 id="accordion-collapse-heading-2">
+                        <button type="button" class="flex items-center justify-between w-full p-5 font-semibold text-left text-gray-300 border border-b-0 border-gray-800 bg-gray-900/40 hover:bg-gray-900/80 transition focus:outline-none" data-accordion-target="#accordion-collapse-body-2" aria-expanded="false" aria-controls="accordion-collapse-body-2">
+                            <span class="flex items-center gap-3"><i data-lucide="bluetooth-searching" class="w-5 h-5 text-violet-400"></i> 2. Connect Your Bluetooth Thermal Printer</span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-collapse-body-2" class="hidden" aria-labelledby="accordion-collapse-heading-2">
+                        <div class="p-6 border border-b-0 border-gray-800 bg-gray-950/20 text-gray-400 text-sm leading-relaxed">
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li>Turn on your 58mm or 80mm thermal receipt printer.</li>
+                                <li>Go to Android Bluetooth Settings and pair your device with the printer (usually labeled <i>MPT-II</i>, <i>Bluetooth Printer</i>, etc. PIN: usually <code>0000</code> or <code>1234</code>).</li>
+                                <li>Open the <strong>Restro BT Printer Service</strong> app, grant Bluetooth permissions, and select your paired printer from the list.</li>
+                                <li>Tap <strong>Test Print</strong> to ensure proper connection.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <h2 id="accordion-collapse-heading-3">
+                        <button type="button" class="flex items-center justify-between w-full p-5 font-semibold text-left text-gray-300 border border-gray-800 rounded-b-2xl bg-gray-900/40 hover:bg-gray-900/80 transition focus:outline-none" data-accordion-target="#accordion-collapse-body-3" aria-expanded="false" aria-controls="accordion-collapse-body-3">
+                            <span class="flex items-center gap-3"><i data-lucide="refresh-cw" class="w-5 h-5 text-brand-400"></i> 3. Syncing POS with Bluetooth Printer</span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-collapse-body-3" class="hidden" aria-labelledby="accordion-collapse-heading-3">
+                        <div class="p-6 border border-t-0 border-gray-800 rounded-b-2xl bg-gray-950/20 text-gray-400 text-sm leading-relaxed">
+                            <p>Once both apps are running, launch <strong>Get Restro POS</strong>. When printing a bill or kitchen KOT, it will automatically prompt the printer service to render the layout. Ensure background service processes are allowed on your Android settings for the printer driver to stay connected in the background.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full px-6 py-8 border-t border-gray-800/40 backdrop-blur-md text-center text-xs text-gray-500 z-10">
+            <p class="mb-2">&copy; 2026 Restro Suite Inc. All rights reserved.</p>
+            <p>Designed for internal operations, fast service, and high reliability.</p>
+        </footer>
+
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qr-modal" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full overflow-y-auto overflow-x-hidden bg-black/60 backdrop-blur-sm transition-all duration-300">
+        <div class="relative p-4 w-full max-w-sm max-h-full">
+            <!-- Modal content -->
+            <div class="relative rounded-3xl bg-gray-900 border border-gray-800 shadow-2xl p-6 text-center">
+                <!-- Close Button -->
+                <button type="button" class="absolute top-4 right-4 text-gray-400 bg-transparent hover:bg-gray-800 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center" onclick="closeQrModal()">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                
+                <!-- Modal Title -->
+                <h4 id="qr-modal-title" class="text-lg font-bold text-white mb-2">QR Code</h4>
+                <p class="text-xs text-gray-400 mb-6">Scan with your Android phone's camera or QR reader to download directly</p>
+                
+                <!-- QR Code Wrapper -->
+                <div class="inline-block p-4 bg-white rounded-2xl mb-6 shadow-inner">
+                    <img id="qr-modal-image" src="" alt="Download QR Code" class="w-48 h-48">
+                </div>
+
+                <!-- Info -->
+                <div class="text-xs text-gray-500 font-mono break-all px-2 select-all" id="qr-modal-url">
+                    URL path
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+    <!-- Three.js Visualizer Script -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Download Action Simulation
+        function handleDownload(button, fileUrl, fileName) {
+            const btnText = button.querySelector('.btn-text');
+            const btnLoader = button.querySelector('.btn-loader');
+            const loaderText = button.querySelector('.loader-text');
+            
+            // Toggle to loading state
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            button.disabled = true;
+
+            // Phase 1: Contacting server
+            loaderText.innerText = "Connecting...";
+            
+            setTimeout(() => {
+                // Phase 2: Simulating downloading
+                loaderText.innerText = "Downloading...";
+                
+                setTimeout(() => {
+                    // Trigger Actual Browser Download
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = fileName;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    // Phase 3: Success
+                    loaderText.innerText = "Completed!";
+                    
+                    setTimeout(() => {
+                        // Reset button state
+                        btnText.classList.remove('hidden');
+                        btnLoader.classList.add('hidden');
+                        button.disabled = false;
+                    }, 1500);
+                }, 1200);
+            }, 800);
+        }
+
+        // Dynamic QR Modal Creator
+        function showQrModal(appName, fileUrl) {
+            const modalTitle = document.getElementById('qr-modal-title');
+            const modalImage = document.getElementById('qr-modal-image');
+            const modalUrl = document.getElementById('qr-modal-url');
+            
+            // Resolve relative path to absolute to make QR scan work properly
+            const absoluteUrl = new URL(fileUrl, window.location.href).href;
+            
+            modalTitle.innerText = appName;
+            modalUrl.innerText = absoluteUrl;
+            
+            // Create QR using qrserver API
+            modalImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(absoluteUrl)}`;
+            
+            // Display modal
+            const modalEl = document.getElementById('qr-modal');
+            modalEl.classList.remove('hidden');
+            modalEl.classList.add('flex');
+        }
+
+        function closeQrModal() {
+            const modalEl = document.getElementById('qr-modal');
+            modalEl.classList.add('hidden');
+            modalEl.classList.remove('flex');
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modalEl = document.getElementById('qr-modal');
+            if (e.target === modalEl) {
+                closeQrModal();
+            }
+        });
+
+        // ================= THREE.JS BACKGROUND SCENE =================
+        const container = document.getElementById('canvas-container');
+        let scene, camera, renderer, particles, torusKnot;
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        function initThree() {
+            // Scene & Camera
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 250;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // Torus Knot Mesh (Futuristic center element)
+            const torusGeometry = new THREE.TorusKnotGeometry(45, 12, 100, 16);
+            // Wireframe material with custom light reaction
+            const torusMaterial = new THREE.MeshBasicMaterial({
+                color: 0xf43f5e,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
+            });
+            torusKnot = new THREE.Mesh(torusGeometry, torusMaterial);
+            scene.add(torusKnot);
+
+            // Particles (Floating digital nodes)
+            const particleCount = 150;
+            const particleGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const colorBrand = new THREE.Color('#f43f5e'); // Rose
+            const colorViolet = new THREE.Color('#8b5cf6'); // Violet
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                // Random position within box
+                positions[i] = (Math.random() - 0.5) * 500;
+                positions[i + 1] = (Math.random() - 0.5) * 500;
+                positions[i + 2] = (Math.random() - 0.5) * 500;
+
+                // Alternate colors between rose and violet
+                const mixedColor = Math.random() > 0.5 ? colorBrand : colorViolet;
+                colors[i] = mixedColor.r;
+                colors[i + 1] = mixedColor.g;
+                colors[i + 2] = mixedColor.b;
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            // Custom particle texture (clean circle)
+            const pMaterial = new THREE.PointsMaterial({
+                size: 2.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6,
+                sizeAttenuation: true
+            });
+
+            particles = new THREE.Points(particleGeometry, pMaterial);
+            scene.add(particles);
+
+            // Event Listeners
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            window.addEventListener('resize', onWindowResize);
+
+            animate();
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.15;
+            mouseY = (event.clientY - windowHalfY) * 0.15;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smooth mouse follow (easing)
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+
+            // Rotate central node
+            if (torusKnot) {
+                torusKnot.rotation.x += 0.003;
+                torusKnot.rotation.y += 0.005;
+                torusKnot.rotation.z += 0.001;
+                
+                // Tilt node slightly based on mouse
+                torusKnot.rotation.x += (targetY * 0.001);
+                torusKnot.rotation.y += (targetX * 0.001);
+            }
+
+            // Rotate and parallax movement for background particles
+            if (particles) {
+                particles.rotation.y += 0.0008;
+                particles.rotation.x += 0.0003;
+
+                particles.position.x = -targetX * 0.2;
+                particles.position.y = targetY * 0.2;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initThree);
+    </script>
+</body>
+</html>
